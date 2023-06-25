@@ -6277,6 +6277,7 @@
       "Microsoft.EntityFrameworkCore.Design >= 5.0.17",
       "Microsoft.EntityFrameworkCore.Relational >= 5.0.17",
       "Microsoft.EntityFrameworkCore.SqlServer >= 5.0.17",
+      "Microsoft.Extensions.DependencyInjection >= 5.0.2",
       "Swashbuckle.AspNetCore >= 6.5.0"
     ]
   },
@@ -6342,6 +6343,10 @@
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[5.0.17, )"
+          },
+          "Microsoft.Extensions.DependencyInjection": {
+            "target": "Package",
+            "version": "[5.0.2, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

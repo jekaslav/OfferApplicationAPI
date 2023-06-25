@@ -10,5 +10,7 @@ public class OfferEntity
     
     public DateTimeOffset CreatedDate { get; set; }
     
+    public int ProviderId { get; set; }
+    
     public ProviderEntity Provider { get; set; }
 }

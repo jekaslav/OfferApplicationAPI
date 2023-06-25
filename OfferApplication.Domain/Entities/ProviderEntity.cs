@@ -6,5 +6,5 @@ public class ProviderEntity
     
     public string Name { get; set; }
     
-    public DateTimeOffset CreatedTime { get; set; }
+    public DateTimeOffset CreatedDate { get; set; }
 }

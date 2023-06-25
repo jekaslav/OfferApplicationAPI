@@ -8,5 +8,5 @@ public class OfferDto
     
     public string Model { get; set; }
     
-    public DateTimeOffset CreatedTime { get; set; }
+    public DateTimeOffset CreatedDate { get; set; }
 }
