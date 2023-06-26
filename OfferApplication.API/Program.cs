@@ -1,6 +1,7 @@
 using OfferApplication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using OfferApplication.API;
 
 namespace OfferApplication;
 

@@ -7,4 +7,6 @@ public class ProviderEntity
     public string Name { get; set; }
     
     public DateTimeOffset CreatedDate { get; set; }
+    
+    public OfferEntity Offer { get; set; }
 }

@@ -3,7 +3,7 @@ using OfferApplication.Domain.Entities;
 
 namespace OfferApplication.Domain.Contexts;
 
-public sealed class OfferApplicationDbContext : DbContext
+public class OfferApplicationDbContext : DbContext
 {
     public OfferApplicationDbContext(DbContextOptions<OfferApplicationDbContext> options) : base(options)
     {

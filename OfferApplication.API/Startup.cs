@@ -5,7 +5,7 @@ using OfferApplication.Services.Interfaces;
 using OfferApplication.Services.Mappers;
 using OfferApplication.Services.Services;
 
-namespace OfferApplication;
+namespace OfferApplication.API;
 
 public class Startup
 {
@@ -20,7 +20,7 @@ public class Startup
     {
         var connection = Configuration.GetConnectionString("SqlConnection");
         services.AddDbContext<OfferApplicationDbContext>(options =>
-            options.UseSqlServer(connection, b => b.MigrationsAssembly("OfferApplication.API")));
+            options.UseSqlServer(connection, b => b.MigrationsAssembly("OfferApplication.Domain")));
             
         services.AddAutoMapper(typeof(EntityToDtoProfile));
                         
