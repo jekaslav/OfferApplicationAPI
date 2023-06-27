@@ -9,6 +9,5 @@ public class EntityToDtoProfile : Profile
     public EntityToDtoProfile()
     {
         CreateMap<OfferEntity, OfferDto>();
-        CreateMap<ProviderEntity, ProviderDto>();
     }
 }

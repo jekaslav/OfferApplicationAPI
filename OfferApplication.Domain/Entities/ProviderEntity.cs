@@ -8,5 +8,5 @@ public class ProviderEntity
     
     public DateTimeOffset CreatedDate { get; set; }
     
-    public OfferEntity Offer { get; set; }
+    public ICollection<OfferEntity> Offers { get; set; }
 }

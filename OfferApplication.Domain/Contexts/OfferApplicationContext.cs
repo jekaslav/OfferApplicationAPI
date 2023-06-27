@@ -3,7 +3,7 @@ using OfferApplication.Domain.Entities;
 
 namespace OfferApplication.Domain.Contexts;
 
-public class OfferApplicationDbContext : DbContext
+public sealed class OfferApplicationDbContext : DbContext
 {
     public OfferApplicationDbContext(DbContextOptions<OfferApplicationDbContext> options) : base(options)
     {
@@ -21,10 +21,12 @@ public class OfferApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Brand).IsRequired();
             entity.Property(e => e.Model).IsRequired();
-        
+
             entity.HasOne(e => e.Provider)
-                .WithMany()
-                .HasForeignKey(e => e.ProviderId);
+                .WithMany(p => p.Offers)
+                .HasForeignKey(e => e.ProviderId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<ProviderEntity>(entity =>

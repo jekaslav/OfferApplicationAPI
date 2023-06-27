@@ -7,35 +7,30 @@ using OfferApplication.Services.Services;
 
 namespace OfferApplication.API;
 
-public class Startup
+public static class Startup
 {
-    public Startup(IConfiguration configuration)
+    public static void ConfigureServices(this WebApplicationBuilder builder)
     {
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
+        builder.Services.AddControllers();
         
-    public void ConfigureServices(IServiceCollection services)
-    {
-        var connection = Configuration.GetConnectionString("SqlConnection");
-        services.AddDbContext<OfferApplicationDbContext>(options =>
-            options.UseSqlServer(connection, b => b.MigrationsAssembly("OfferApplication.Domain")));
-            
-        services.AddAutoMapper(typeof(EntityToDtoProfile));
-                        
-        services.AddScoped<IProviderService, ProviderService>();
-        services.AddScoped<IOfferService, OfferService>();  
-                        
-        services.AddSwaggerGen(c =>
+        builder.Services.AddSwaggerGen(c =>
         {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OfferApplication.API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "OfferApplication.API", Version = "v1" });
         });
+        
+        var connection = builder.Configuration.GetConnectionString("SqlConnection");
+        builder.Services.AddDbContext<OfferApplicationDbContext>(options =>
+            options.UseSqlServer(connection, b => b.MigrationsAssembly("OfferApplication.API")));
+            
+        builder.Services.AddAutoMapper(typeof(EntityToDtoProfile));
+                        
+        builder.Services.AddScoped<IProviderService, ProviderService>();
+        builder.Services.AddScoped<IOfferService, OfferService>();  
     }
         
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public static void Configure(this WebApplication app)
     {
-        if (env.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
@@ -48,6 +43,6 @@ public class Startup
 
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.MapControllers();
     }
 }

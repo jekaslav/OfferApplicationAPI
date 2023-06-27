@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfferApplication.Domain.Contexts;
 using OfferApplication.Domain.Entities;
@@ -19,39 +20,26 @@ public class OfferService : IOfferService
         Mapper = mapper;
     }
 
-    public async Task<IEnumerable<OfferDto>> GetAllOffers(CancellationToken cancellationToken)
-    {
-        var offers = await OfferApplicationDbContext.Offers
-            .AsNoTracking()
-            .Select(x => Mapper.Map<OfferDto>(x))
-            .ToListAsync(cancellationToken);
-
-        if (offers is null)
-        {
-            throw new NullReferenceException();
-        }
-
-        return offers;
-    }
-
-    public async Task<IEnumerable<OfferDto>> SearchOffers(string brand, string model, string provider,
-        CancellationToken cancellationToken)
+    public async Task<IEnumerable<OfferDto>> SearchOffers(string? brand, [FromQuery] string? model, [FromQuery] string? provider, CancellationToken cancellationToken)
     {
         var query = OfferApplicationDbContext.Offers.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(brand))
         {
-            query = query.Where(x => x.Brand == brand);
+            var lowerCaseBrand = brand.ToLower();
+            query = query.Where(x => x.Brand.ToLower().Contains(lowerCaseBrand));
         }
 
         if (!string.IsNullOrWhiteSpace(model))
         {
-            query = query.Where(x => x.Model == model);
+            var lowerCaseModel = model.ToLower();
+            query = query.Where(x => x.Model.ToLower().Contains(lowerCaseModel));
         }
 
         if (!string.IsNullOrWhiteSpace(provider))
         {
-            query = query.Where(x => x.Provider.Name == provider);
+            var lowerCaseProvider = provider.ToLower();
+            query = query.Where(x => x.Provider.Name.ToLower().Contains(lowerCaseProvider));
         }
 
         var offers = await query
@@ -59,15 +47,10 @@ public class OfferService : IOfferService
             .Select(x => Mapper.Map<OfferDto>(x))
             .ToListAsync(cancellationToken);
 
-        if (offers is null)
-        {
-            throw new NullReferenceException();
-        }
-
         return offers;
     }
 
-    public async Task<bool> Create(OfferDto offerDto, CancellationToken cancellationToken)
+    public async Task<bool> Create(OfferDto offerDto, int providerId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(offerDto.Brand))
         {
@@ -79,11 +62,17 @@ public class OfferService : IOfferService
             throw new ArgumentException();
         }
 
+        var provider = await OfferApplicationDbContext.Providers.FindAsync(providerId);
+        if (provider == null)
+        {
+            throw new ArgumentException("Invalid providerId");
+        }
+
         var newOffer = new OfferEntity
         {
-            Id = offerDto.Id,
             Brand = offerDto.Brand,
             Model = offerDto.Model,
+            ProviderId = providerId,
             CreatedDate = DateTimeOffset.Now
         };
 

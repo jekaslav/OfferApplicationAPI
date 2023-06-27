@@ -1,18 +1,11 @@
-using OfferApplication;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using OfferApplication.API;
 
-namespace OfferApplication;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+builder.ConfigureServices();
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
-}
+var app = builder.Build();
+
+app.Configure();
+
+app.Run();
