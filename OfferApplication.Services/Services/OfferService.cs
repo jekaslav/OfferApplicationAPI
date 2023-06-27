@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfferApplication.Domain.Contexts;
 using OfferApplication.Domain.Entities;
@@ -20,26 +19,33 @@ public class OfferService : IOfferService
         Mapper = mapper;
     }
 
-    public async Task<IEnumerable<OfferDto>> SearchOffers(string? brand, [FromQuery] string? model, [FromQuery] string? provider, CancellationToken cancellationToken)
+    public async Task<IEnumerable<OfferDto>> SearchOffers(string? brand, string? model, string? provider, CancellationToken cancellationToken)
     {
         var query = OfferApplicationDbContext.Offers.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(brand))
+        if (!string.IsNullOrWhiteSpace(brand) || !string.IsNullOrWhiteSpace(model) || !string.IsNullOrWhiteSpace(provider))
         {
-            var lowerCaseBrand = brand.ToLower();
-            query = query.Where(x => x.Brand.ToLower().Contains(lowerCaseBrand));
-        }
+            if (!string.IsNullOrWhiteSpace(brand))
+            {
+                var lowerCaseBrand = brand.ToLower();
+                query = query.Where(x => x.Brand.ToLower().Contains(lowerCaseBrand));
+            }
 
-        if (!string.IsNullOrWhiteSpace(model))
-        {
-            var lowerCaseModel = model.ToLower();
-            query = query.Where(x => x.Model.ToLower().Contains(lowerCaseModel));
-        }
+            if (!string.IsNullOrWhiteSpace(model))
+            {
+                var lowerCaseModel = model.ToLower();
+                query = query.Where(x => x.Model.ToLower().Contains(lowerCaseModel));
+            }
 
-        if (!string.IsNullOrWhiteSpace(provider))
+            if (!string.IsNullOrWhiteSpace(provider))
+            {
+                var lowerCaseProvider = provider.ToLower();
+                query = query.Where(x => x.Provider.Name.ToLower().Contains(lowerCaseProvider));
+            }
+        }
+        else
         {
-            var lowerCaseProvider = provider.ToLower();
-            query = query.Where(x => x.Provider.Name.ToLower().Contains(lowerCaseProvider));
+            throw new Exception("need 1 parameter");
         }
 
         var offers = await query

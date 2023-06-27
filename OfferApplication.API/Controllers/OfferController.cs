@@ -14,16 +14,16 @@ public class OfferController : ControllerBase
     }
 
     [HttpPost("offers/create")]
-    public async Task<IActionResult> CreateOffer([FromBody] OfferDto offerDto, int providerId)
+    public async Task<IActionResult> CreateOffer([FromBody] OfferDto offerDto, int providerId, CancellationToken cancellationToken)
     {
-        await _offerService.Create(offerDto, providerId, CancellationToken.None);
+        await _offerService.Create(offerDto, providerId, cancellationToken);
         return Ok();
     }
 
     [HttpGet("offers/search")]
-    public async Task<IActionResult> SearchOffers(string? brand, string? model = null, string? provider = null)
+    public async Task<IActionResult> SearchOffers([FromQuery] string? brand, [FromQuery] string? model, [FromQuery] string? provider, CancellationToken cancellationToken)
     {
-        var offers = await _offerService.SearchOffers(brand, model, provider, CancellationToken.None);
+        var offers = await _offerService.SearchOffers(brand, model, provider, cancellationToken);
         return Ok(offers);
     }
 }
